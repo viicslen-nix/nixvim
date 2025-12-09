@@ -5,6 +5,7 @@
     apps.default = {
       type = "app";
       program = "${config.packages.default}/bin/nvim";
+      meta.description = "NixVim-based Neovim configuration";
     };
   };
 }
