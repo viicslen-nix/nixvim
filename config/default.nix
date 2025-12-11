@@ -95,6 +95,99 @@
     };
   };
 
+  # ===== LSP Configuration (native vim.lsp API) =====
+  lsp.servers = {
+    # Nix
+    nil_ls = {
+      enable = true;
+      config.settings.nil.formatting.command = ["alejandra"];
+    };
+
+    # PHP
+    intelephense = {
+      enable = true;
+      package = pkgs.nodePackages.intelephense;
+      config.settings.intelephense.files.maxSize = 5000000;
+    };
+
+    # TypeScript/JavaScript
+    ts_ls = {
+      enable = true;
+      config.filetypes = [
+        "javascript"
+        "javascriptreact"
+        "javascript.jsx"
+        "typescript"
+        "typescriptreact"
+        "typescript.tsx"
+      ];
+    };
+
+    # Vue
+    vue_ls = {
+      enable = true;
+      config = {
+        filetypes = ["vue"];
+        init_options.vue.hybridMode = false;
+      };
+    };
+
+    # Python
+    pyright.enable = true;
+
+    # Go
+    gopls.enable = true;
+
+    # Lua
+    lua_ls = {
+      enable = true;
+      config.settings.Lua = {
+        diagnostics.globals = ["vim"];
+        workspace.checkThirdParty = false;
+        telemetry.enable = false;
+      };
+    };
+
+    # Bash
+    bashls.enable = true;
+
+    # HTML
+    html.enable = true;
+
+    # CSS
+    cssls.enable = true;
+
+    # Tailwind CSS
+    tailwindcss.enable = true;
+
+    # ESLint (diagnostics and autofix)
+    eslint = {
+      enable = true;
+      config.settings = {
+        workingDirectories = {mode = "auto";};
+        codeActionOnSave = {
+          enable = true;
+          mode = "all";
+        };
+      };
+    };
+
+    # Terraform/HCL
+    terraformls.enable = true;
+
+    # Markdown
+    marksman.enable = true;
+
+    # SQL
+    sqls.enable = true;
+
+    # C/C++
+    clangd.enable = true;
+
+    # Zig
+    zls.enable = true;
+  };
+
   # All plugins configuration
   plugins = {
     # ===== Syntax & Parsing =====
@@ -144,131 +237,10 @@
 
     treesitter-context.enable = true;
 
-    # ===== LSP Configuration =====
+    # ===== Language Server Protocol (LSP) =====
 
-    lsp = {
-      enable = true;
-
-      servers = {
-        # Nix
-        nil_ls = {
-          enable = true;
-          settings = {
-            formatting.command = ["alejandra"];
-          };
-        };
-
-        # PHP
-        intelephense = {
-          enable = true;
-          package = pkgs.nodePackages.intelephense;
-          settings = {
-            intelephense = {
-              files.maxSize = 5000000;
-            };
-          };
-        };
-
-        # TypeScript/JavaScript
-        ts_ls = {
-          enable = true;
-          filetypes = [
-            "javascript"
-            "javascriptreact"
-            "javascript.jsx"
-            "typescript"
-            "typescriptreact"
-            "typescript.tsx"
-          ];
-        };
-
-        # Vue (supports Vue 2.7+ and Vue 3)
-        vue_ls = {
-          enable = true;
-          tslsIntegration = true;
-          package = pkgs.vue-language-server;
-        };
-
-        # Python
-        pyright.enable = true;
-
-        # Go
-        gopls.enable = true;
-
-        # Lua
-        lua_ls = {
-          enable = true;
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = ["vim"];
-              };
-              workspace = {
-                checkThirdParty = false;
-              };
-              telemetry.enable = false;
-            };
-          };
-        };
-
-        # Bash
-        bashls.enable = true;
-
-        # HTML
-        html.enable = true;
-
-        # CSS
-        cssls.enable = true;
-
-        # Tailwind CSS
-        tailwindcss.enable = true;
-
-        # ESLint (diagnostics and autofix)
-        eslint = {
-          enable = true;
-          settings = {
-            workingDirectories = {mode = "auto";};
-            codeActionOnSave = {
-              enable = true;
-              mode = "all";
-            };
-          };
-        };
-
-        # Terraform/HCL
-        terraformls.enable = true;
-
-        # Markdown
-        marksman.enable = true;
-
-        # SQL
-        sqls.enable = true;
-
-        # C/C++
-        clangd.enable = true;
-
-        # Zig
-        zls.enable = true;
-      };
-
-      keymaps = {
-        lspBuf = {
-          K = "hover";
-          gD = "declaration";
-          gd = "definition";
-          gi = "implementation";
-          gr = "references";
-          gt = "type_definition";
-          "<leader>ca" = "code_action";
-          "<leader>rn" = "rename";
-        };
-        diagnostic = {
-          "<leader>e" = "open_float";
-          "[d" = "goto_prev";
-          "]d" = "goto_next";
-        };
-      };
-    };
+    # Default configuration for LSP servers
+    lspconfig.enable = true;
 
     # ===== Navigation & Search =====
 
