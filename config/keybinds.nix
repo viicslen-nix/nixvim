@@ -76,7 +76,7 @@
       };
     }
     {
-      key = "<leader>x";
+      key = "<leader>q";
       mode = ["n"];
       action = "<cmd>bdelete<CR>";
       options = {
