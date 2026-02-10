@@ -106,6 +106,7 @@
     # PHP
     intelephense = {
       enable = true;
+      activate = true;
       package = pkgs.nodePackages.intelephense;
       config.settings.intelephense.files.maxSize = 5000000;
     };
