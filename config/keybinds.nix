@@ -495,53 +495,53 @@
   ];
 
   lsp.keymaps = [
-  {
-    key = "gd";
-    lspBufAction = "definition";
-  }
-  {
-    key = "gD";
-    lspBufAction = "references";
-  }
-  {
-    key = "gt";
-    lspBufAction = "type_definition";
-  }
-  {
-    key = "gi";
-    lspBufAction = "implementation";
-  }
-  {
-    key = "K";
-    lspBufAction = "hover";
-  }
-  {
-    key = "<leader>k";
-    action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=-1, float=true }) end";
-  }
-  {
-    key = "<leader>j";
-    action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=1, float=true }) end";
-  }
-  {
-    key = "<leader>lx";
-    action = "<CMD>LspStop<Enter>";
-  }
-  {
-    key = "<leader>ls";
-    action = "<CMD>LspStart<Enter>";
-  }
-  {
-    key = "<leader>lr";
-    action = "<CMD>LspRestart<Enter>";
-  }
-  {
-    key = "gd";
-    action = lib.nixvim.mkRaw "require('telescope.builtin').lsp_definitions";
-  }
-  {
-    key = "K";
-    action = "<CMD>Lspsaga hover_doc<Enter>";
-  }
-];
+    {
+      key = "gd";
+      lspBufAction = "definition";
+    }
+    {
+      key = "gD";
+      lspBufAction = "references";
+    }
+    {
+      key = "gt";
+      lspBufAction = "type_definition";
+    }
+    {
+      key = "gi";
+      lspBufAction = "implementation";
+    }
+    {
+      key = "K";
+      lspBufAction = "hover";
+    }
+    {
+      key = "<leader>k";
+      action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=-1, float=true }) end";
+    }
+    {
+      key = "<leader>j";
+      action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=1, float=true }) end";
+    }
+    {
+      key = "<leader>lx";
+      action = "<CMD>LspStop<Enter>";
+    }
+    {
+      key = "<leader>ls";
+      action = "<CMD>LspStart<Enter>";
+    }
+    {
+      key = "<leader>lr";
+      action = "<CMD>LspRestart<Enter>";
+    }
+    {
+      key = "gd";
+      action = lib.nixvim.mkRaw "require('telescope.builtin').lsp_definitions";
+    }
+    {
+      key = "K";
+      action = "<CMD>Lspsaga hover_doc<Enter>";
+    }
+  ];
 }
