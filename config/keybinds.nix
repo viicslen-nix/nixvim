@@ -498,50 +498,62 @@
     {
       key = "gd";
       lspBufAction = "definition";
+      options.desc = "Go to definition";
     }
     {
       key = "gD";
       lspBufAction = "references";
+      options.desc = "Show references";
     }
     {
       key = "gt";
       lspBufAction = "type_definition";
+      options.desc = "Go to type definition";
     }
     {
       key = "gi";
       lspBufAction = "implementation";
+      options.desc = "Go to implementation";
     }
     {
       key = "K";
       lspBufAction = "hover";
+      options.desc = "Show hover documentation";
     }
     {
       key = "<leader>k";
       action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=-1, float=true }) end";
+      options.desc = "Previous diagnostic";
     }
     {
       key = "<leader>j";
       action = lib.nixvim.mkRaw "function() vim.diagnostic.jump({ count=1, float=true }) end";
+      options.desc = "Next diagnostic";
     }
     {
       key = "<leader>lx";
       action = "<CMD>LspStop<Enter>";
+      options.desc = "Stop LSP";
     }
     {
       key = "<leader>ls";
       action = "<CMD>LspStart<Enter>";
+      options.desc = "Start LSP";
     }
     {
       key = "<leader>lr";
       action = "<CMD>LspRestart<Enter>";
+      options.desc = "Restart LSP";
     }
     {
       key = "gd";
       action = lib.nixvim.mkRaw "require('telescope.builtin').lsp_definitions";
+      options.desc = "Go to definition (Telescope)";
     }
     {
       key = "K";
       action = "<CMD>Lspsaga hover_doc<Enter>";
+      options.desc = "Show hover documentation (Lspsaga)";
     }
   ];
 }
