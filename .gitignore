@@ -11,6 +11,10 @@ result-*
 *~
 .vscode/
 .idea/
+.cursorrules
+.windsurfrules
+.clinerules
+AGENT.md
 
 # OS files
 .DS_Store

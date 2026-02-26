@@ -7,7 +7,7 @@ A standalone Neovim configuration using the NixVim framework, providing feature 
 - **Full LSP Support**: 17 language servers including Nix, PHP (Intelephense), TypeScript, Python, Go, Lua, Bash, HTML, CSS, Tailwind, Terraform, HCL, Markdown, SQL, C/C++, and Zig
 - **TreeSitter**: Syntax highlighting and code folding for all supported languages
 - **OneDark Theme**: Darker variant with transparency support
-- **Productivity Plugins**: Telescope, nvim-tree, bufferline, lualine, alpha dashboard, which-key
+- **Productivity Plugins**: Telescope, snacks.nvim (explorer, lazygit), bufferline, lualine, alpha dashboard, which-key
 - **Git Integration**: Gitsigns, vim-fugitive, git-conflict, gitlinker, worktrees.nvim
 - **AI Assistance**: GitHub Copilot, Avante with MCPHub integration
 - **Custom Plugins**: laravel.nvim, worktrees.nvim, neotest-pest, mcphub.nvim
@@ -108,7 +108,7 @@ This configuration follows a **unified keymap philosophy** shared with the windo
 **File Tree**
 | Keybind | Mode | Action |
 |---------|------|--------|
-| `<leader>e` | n | Toggle NvimTree |
+| `<leader>e` | n | Toggle Snacks Explorer |
 
 **Comments**
 | Keybind | Mode | Action |

@@ -168,13 +168,17 @@
       };
     }
 
-    # NvimTree
+    # Snacks Explorer
     {
       key = "<leader>e";
       mode = ["n"];
-      action = "<cmd>NvimTreeToggle<CR>";
+      action.__raw = ''
+        function()
+          Snacks.explorer()
+        end
+      '';
       options = {
-        desc = "Toggle file tree";
+        desc = "Explorer";
         silent = true;
         noremap = true;
       };

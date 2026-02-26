@@ -295,36 +295,7 @@
           show_buffer_close_icons = true;
           show_close_icon = false;
           always_show_bufferline = true;
-          offsets = [
-            {
-              filetype = "NvimTree";
-              text = "File Explorer";
-              highlight = "Directory";
-              separator = true;
-            }
-          ];
-        };
-      };
-    };
-
-    # NvimTree
-    nvim-tree = {
-      enable = true;
-      settings = {
-        git = {
-          enable = true;
-          ignore = false;
-        };
-        modified = {
-          enable = true;
-        };
-        hijack_cursor = true;
-        renderer = {
-          highlight_opened_files = "all";
-        };
-        view = {
-          cursorline = true;
-          width = 35;
+          offsets = [];
         };
       };
     };
@@ -349,7 +320,12 @@
           lualine_a = ["mode"];
           lualine_b = ["branch" "diff" "diagnostics"];
           lualine_c = ["filename"];
-          lualine_x = ["encoding" "fileformat" "filetype"];
+          lualine_x = [
+            "lsp_status"
+            "encoding"
+            "fileformat"
+            "filetype"
+          ];
           lualine_y = ["progress"];
           lualine_z = ["location"];
         };
@@ -617,9 +593,23 @@
       })
     end)
 
-    -- Snacks.nvim setup for lazygit
+    -- Snacks.nvim setup for lazygit and explorer
     require('snacks').setup({
       lazygit = { configure = true },
+      explorer = { replace_netrw = true },
+      picker = {
+        sources = {
+          explorer = {
+            auto_close = true,
+            layout = {
+              preset = "vertical",
+              layout = {
+                min_height = 5,
+              },
+            },
+          },
+        },
+      },
     })
   '';
 }
