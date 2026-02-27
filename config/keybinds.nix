@@ -408,7 +408,7 @@
     {
       key = "<leader>xx";
       mode = ["n"];
-      action = "<cmd>TroubleToggle<CR>";
+      action = "<cmd>Trouble diagnostics toggle<CR>";
       options = {
         desc = "Toggle diagnostics";
         silent = true;
@@ -416,21 +416,51 @@
       };
     }
     {
-      key = "<leader>xw";
+      key = "<leader>xd";
       mode = ["n"];
-      action = "<cmd>TroubleToggle workspace_diagnostics<CR>";
+      action = "<cmd>Trouble diagnostics toggle filter.buf=0<CR>";
       options = {
-        desc = "Workspace diagnostics";
+        desc = "Document diagnostics";
         silent = true;
         noremap = true;
       };
     }
     {
-      key = "<leader>xd";
+      key = "<leader>xq";
       mode = ["n"];
-      action = "<cmd>TroubleToggle document_diagnostics<CR>";
+      action = "<cmd>Trouble qflist toggle<CR>";
       options = {
-        desc = "Document diagnostics";
+        desc = "Quickfix List";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      key = "<leader>xl";
+      mode = ["n"];
+      action = "<cmd>Trouble loclist toggle<CR>";
+      options = {
+        desc = "Location List";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      key = "<leader>xs";
+      mode = ["n"];
+      action = "<cmd>Trouble symbols toggle focus=false<CR>";
+      options = {
+        desc = "Symbols";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      key = "<leader>xL";
+      mode = ["n"];
+      action = "<cmd>Trouble lsp toggle focus=false win.position=right<CR>";
+      options = {
+        desc = "LSP definitions/references/etc";
         silent = true;
         noremap = true;
       };
