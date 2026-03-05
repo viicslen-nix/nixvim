@@ -243,6 +243,12 @@
     # Default configuration for LSP servers
     lspconfig.enable = true;
 
+    # Lspsaga
+    lspsaga = {
+      enable = true;
+      ui.border = "rounded";
+    };
+
     # ===== Navigation & Search =====
 
     # Telescope

@@ -14,6 +14,22 @@
       };
     }
 
+    # Copy relative file path
+    {
+      key = "<leader>cf";
+      mode = ["n"];
+      action.__raw = ''function()
+        local relpath = vim.fn.expand("%:.")
+        vim.fn.setreg("+", relpath)
+        print("Copied: " .. relpath)
+      end'';
+      options = {
+        desc = "Copy relative file path";
+        silent = true;
+        noremap = true;
+      };
+    }
+
     # Append characters
     {
       key = "<leader>;";
@@ -100,7 +116,7 @@
     {
       key = "<leader>gd";
       mode = ["n"];
-      action = "<cmd>lua vim.lsp.buf.definition()<CR>";
+      action = "<cmd>Lspsaga goto_definition<CR>";
       options = {
         desc = "Go to definition";
         silent = true;
@@ -108,9 +124,19 @@
       };
     }
     {
+      key = "<leader>pd";
+      mode = ["n"];
+      action = "<cmd>Lspsaga peek_definition<CR>";
+      options = {
+        desc = "Peek definition";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
       key = "<leader>gt";
       mode = ["n"];
-      action = "<cmd>lua vim.lsp.buf.type_definition()<CR>";
+      action = "<cmd>Lspsaga goto_type_definition<CR>";
       options = {
         desc = "Go to type definition";
         silent = true;
@@ -120,7 +146,7 @@
     {
       key = "<leader>h";
       mode = ["n"];
-      action = "<cmd>lua vim.lsp.buf.hover()<CR>";
+      action = "<cmd>Lspsaga hover_doc<CR>";
       options = {
         desc = "Hover documentation";
         silent = true;
@@ -140,9 +166,29 @@
     {
       key = "<leader>gr";
       mode = ["n"];
-      action = "<cmd>lua vim.lsp.buf.references()<CR>";
+      action = "<cmd>Lspsaga finder<CR>";
       options = {
-        desc = "List references";
+        desc = "LSP Finder";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      key = "<leader>ca";
+      mode = ["n" "v"];
+      action = "<cmd>Lspsaga code_action<CR>";
+      options = {
+        desc = "Code action";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
+      key = "<leader>rn";
+      mode = ["n"];
+      action = "<cmd>Lspsaga rename<CR>";
+      options = {
+        desc = "Rename symbol";
         silent = true;
         noremap = true;
       };
