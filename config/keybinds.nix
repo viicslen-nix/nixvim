@@ -574,6 +574,30 @@
     }
   ];
 
+  plugins = {
+    telescope.keymaps = {
+      "<leader>ff" = "find_files";
+      "<leader>fg" = "live_grep";
+      "<leader>fb" = "buffers";
+      "<leader>fh" = "help_tags";
+      "<leader>fr" = "oldfiles";
+      "<leader>fc" = "commands";
+      "<leader>fd" = "diagnostics";
+    };
+
+    cmp.settings.mapping = {
+      "<C-Space>" = "cmp.mapping.complete()";
+      "<C-e>" = "cmp.mapping.close()";
+      "<CR>" = "cmp.mapping.confirm({ select = true })";
+      "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+      "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+      "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+      "<C-f>" = "cmp.mapping.scroll_docs(4)";
+    };
+
+    toggleterm.settings.open_mapping = "[[<C-\\>]]";
+  };
+
   lsp.keymaps = [
     {
       key = "gd";
