@@ -246,7 +246,7 @@
     # Lspsaga
     lspsaga = {
       enable = true;
-      ui.border = "rounded";
+      settings.ui.border = "rounded";
     };
 
     # ===== Navigation & Search =====
@@ -425,6 +425,14 @@
       enable = true;
       autoEnableSources = true;
       settings = {
+        window = {
+          completion = {
+            border = "rounded";
+          };
+          documentation = {
+            border = "rounded";
+          };
+        };
         sources = [
           {name = "nvim_lsp";}
           {name = "path";}
@@ -545,6 +553,21 @@
 
   # Lua configuration for custom plugins
   extraConfigLua = ''
+    -- Global border configuration for diagnostics and LSP handlers
+    vim.diagnostic.config({
+      float = { border = "rounded" },
+    })
+
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+      vim.lsp.handlers.hover,
+      { border = "rounded" }
+    )
+
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+      vim.lsp.handlers.signature_help,
+      { border = "rounded" }
+    )
+
     -- Laravel setup
     require('laravel').setup({
       lsp_server = "intelephense",
