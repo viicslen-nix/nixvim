@@ -18,11 +18,13 @@
     {
       key = "<leader>cf";
       mode = ["n"];
-      action.__raw = ''function()
-        local relpath = vim.fn.expand("%:.")
-        vim.fn.setreg("+", relpath)
-        print("Copied: " .. relpath)
-      end'';
+      action.__raw = ''
+        function()
+          local relpath = vim.fn.expand("%:.")
+          vim.fn.setreg("+", relpath)
+          print("Copied: " .. relpath)
+        end
+      '';
       options = {
         desc = "Copy relative file path";
         silent = true;
