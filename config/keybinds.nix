@@ -106,6 +106,16 @@
 
     # LSP keybinds (additional to plugins.lsp.keymaps)
     {
+      key = "gd";
+      mode = ["n"];
+      action = "<cmd>Lspsaga goto_definition<CR>";
+      options = {
+        desc = "Go to definition";
+        silent = true;
+        noremap = true;
+      };
+    }
+    {
       key = "<leader>gD";
       mode = ["n"];
       action = "<cmd>lua vim.lsp.buf.declaration()<CR>";
