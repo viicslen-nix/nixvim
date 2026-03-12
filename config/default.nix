@@ -114,24 +114,31 @@
     # TypeScript/JavaScript
     ts_ls = {
       enable = true;
-      config.filetypes = [
-        "javascript"
-        "javascriptreact"
-        "javascript.jsx"
-        "typescript"
-        "typescriptreact"
-        "typescript.tsx"
-        "vue"
-      ];
+      config = {
+        filetypes = [
+          "javascript"
+          "javascriptreact"
+          "javascript.jsx"
+          "typescript"
+          "typescriptreact"
+          "typescript.tsx"
+          "vue"
+        ];
+        init_options.plugins = [
+          {
+            name = "@vue/typescript-plugin";
+            location = "${pkgs.vue-language-server}/lib/language-tools/packages/typescript-plugin";
+            languages = ["javascript" "typescript" "vue"];
+          }
+        ];
+      };
     };
 
-    # Vue
+    # Vue - always hybrid mode since v3.0.0 (no hybridMode option needed)
+    # vue_ls handles CSS/HTML, ts_ls + @vue/typescript-plugin handles TypeScript
     vue_ls = {
       enable = true;
-      config = {
-        filetypes = ["vue"];
-        init_options.vue.hybridMode = false;
-      };
+      config.filetypes = ["vue"];
     };
 
     # Python
