@@ -6,6 +6,7 @@
   neotest-pest,
   mcphub-nvim,
   mcp-hub,
+  phpantom-lsp,
   ...
 }: {
   # Import keybinds module
@@ -101,14 +102,6 @@
     nil_ls = {
       enable = true;
       config.settings.nil.formatting.command = ["alejandra"];
-    };
-
-    # PHP
-    intelephense = {
-      enable = true;
-      activate = true;
-      package = pkgs.nodePackages.intelephense;
-      config.settings.intelephense.files.maxSize = 5000000;
     };
 
     # TypeScript/JavaScript
@@ -529,6 +522,9 @@
     # MCP Hub CLI
     mcp-hub
 
+    # PHP LSP
+    phpantom-lsp
+
     # Formatters
     alejandra
     nodePackages.prettier
@@ -557,9 +553,17 @@
       { border = "rounded" }
     )
 
+    -- PHPantom LSP setup
+    vim.lsp.config['phpantom'] = {
+      cmd = { 'phpantom_lsp' },
+      filetypes = { 'php' },
+      root_markers = { 'composer.json', '.git' },
+    }
+    vim.lsp.enable('phpantom')
+
     -- Laravel setup
     require('laravel').setup({
-      lsp_server = "intelephense",
+      lsp_server = "phpantom",
     })
 
     -- Worktrees setup

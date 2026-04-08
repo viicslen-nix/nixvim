@@ -44,19 +44,14 @@
           inherit (pkgs) lib fetchFromGitHub;
         };
         mcphub-nvim = inputs.mcphub-nvim.packages.${system}.default;
-
-        # Create nixpkgs with allowUnfree for intelephense
-        nixpkgsWithUnfree = import inputs.nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
+        phpantom-lsp = import ./pkgs/phpantom-lsp.nix {inherit pkgs;};
 
         # Build NixVim with our configuration
         nixvimLib = nixvim.lib.${system};
         nixvimModule = {
           inherit pkgs;
           module = import ./config {
-            inherit pkgs laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub;
+            inherit pkgs laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
             inherit (pkgs) lib;
           };
         };
@@ -64,16 +59,15 @@
         # Default package is the configured Neovim
         packages = {
           default = nixvim.legacyPackages.${system}.makeNixvimWithModule {
-            pkgs = nixpkgsWithUnfree;
+            inherit pkgs;
             module = import ./config {
-              pkgs = nixpkgsWithUnfree;
-              inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub;
-              lib = nixpkgsWithUnfree.lib;
+              inherit pkgs laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
+              inherit (pkgs) lib;
             };
           };
 
           # Expose custom packages
-          inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub;
+          inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
         };
 
         # Provide the default formatter
