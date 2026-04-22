@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    packages = {
+      url = "github:viicslen-nix/packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -35,16 +39,13 @@
         system,
         ...
       }: let
-        # Import custom plugin packages
-        laravel-nvim = import ./pkgs/laravel-nvim.nix {inherit pkgs;};
-        worktrees-nvim = import ./pkgs/worktrees-nvim.nix {inherit pkgs;};
-        neotest-pest = import ./pkgs/neotest-pest.nix {inherit pkgs;};
-        mcp-hub = import ./pkgs/mcp-hub.nix {
-          inherit pkgs;
-          inherit (pkgs) lib fetchFromGitHub;
-        };
+        sharedPackages = inputs.packages.packages.${system};
+        laravel-nvim = sharedPackages.nvim.laravel-nvim;
+        worktrees-nvim = sharedPackages.nvim.worktrees-nvim;
+        neotest-pest = sharedPackages.nvim.neotest-pest;
+        mcp-hub = sharedPackages.nvim.mcp-hub;
         mcphub-nvim = inputs.mcphub-nvim.packages.${system}.default;
-        phpantom-lsp = import ./pkgs/phpantom-lsp.nix {inherit pkgs;};
+        phpantom-lsp = sharedPackages.php.phpantom-lsp;
 
         # Build NixVim with our configuration
         nixvimLib = nixvim.lib.${system};
