@@ -527,7 +527,7 @@
 
     # Formatters
     alejandra
-    nodePackages.prettier
+    prettier
     stylua
 
     # LSP extras
