@@ -10,7 +10,7 @@
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -34,11 +34,14 @@
       systems = ["x86_64-linux"];
 
       perSystem = {
-        config,
         pkgs,
         system,
         ...
       }: let
+        pkgsUnfree = import inputs.nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
         sharedPackages = inputs.packages.packages.${system};
         laravel-nvim = sharedPackages.nvim.laravel-nvim;
         worktrees-nvim = sharedPackages.nvim.worktrees-nvim;
@@ -46,24 +49,15 @@
         mcp-hub = sharedPackages.nvim.mcp-hub;
         mcphub-nvim = inputs.mcphub-nvim.packages.${system}.default;
         phpantom-lsp = sharedPackages.php.phpantom-lsp;
-
-        # Build NixVim with our configuration
-        nixvimLib = nixvim.lib.${system};
-        nixvimModule = {
-          inherit pkgs;
-          module = import ./config {
-            inherit pkgs laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
-            inherit (pkgs) lib;
-          };
-        };
       in {
         # Default package is the configured Neovim
         packages = {
           default = nixvim.legacyPackages.${system}.makeNixvimWithModule {
-            inherit pkgs;
+            pkgs = pkgsUnfree;
             module = import ./config {
-              inherit pkgs laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
-              inherit (pkgs) lib;
+              pkgs = pkgsUnfree;
+              inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
+              inherit (pkgsUnfree) lib;
             };
           };
 
