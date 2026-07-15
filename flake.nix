@@ -10,7 +10,9 @@
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-26.05";
+      # Track the unstable branch to match nixpkgs (nixos-unstable / 26.11); the
+      # nixos-26.05 branch's nixos-render-docs patch doesn't apply to 26.11.
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
