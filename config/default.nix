@@ -1,18 +1,19 @@
 {
   pkgs,
   lib,
+  config,
   laravel-nvim,
   worktrees-nvim,
   neotest-pest,
   mcphub-nvim,
   mcp-hub,
-  phpantom-lsp,
   laravel-lsp,
   ...
 }: {
   # Import keybinds module
   imports = [
     ./keybinds.nix
+    ./phpantom.nix
   ];
 
   # Core Neovim options
@@ -524,7 +525,6 @@
     mcp-hub
 
     # PHP LSP
-    phpantom-lsp
     laravel-lsp
 
     # Formatters
@@ -555,15 +555,7 @@
       { border = "rounded" }
     )
 
-    -- PHPantom LSP setup
-    vim.lsp.config['phpantom'] = {
-      cmd = { 'phpantom_lsp' },
-      filetypes = { 'php' },
-      root_markers = { 'composer.json', '.git' },
-    }
-    vim.lsp.enable('phpantom')
-
-    -- Laravel LSP setup (framework-aware; runs alongside phpantom)
+    -- Laravel LSP setup (framework-aware)
     vim.lsp.config['laravel_lsp'] = {
       cmd = { 'laravel-lsp' },
       filetypes = { 'php', 'blade' },
@@ -573,7 +565,7 @@
 
     -- Laravel setup
     require('laravel').setup({
-      lsp_server = "phpantom",
+      ${lib.optionalString config.phpantom.enable ''lsp_server = "phpantom",''}
     })
 
     -- Worktrees setup

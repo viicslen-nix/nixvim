@@ -57,10 +57,9 @@
         packages = {
           default = nixvim.legacyPackages.${system}.makeNixvimWithModule {
             pkgs = pkgsUnfree;
-            module = import ./config {
-              pkgs = pkgsUnfree;
+            module = ./config;
+            extraSpecialArgs = {
               inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp laravel-lsp;
-              inherit (pkgsUnfree) lib;
             };
           };
 
