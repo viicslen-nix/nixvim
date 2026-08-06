@@ -7,6 +7,7 @@
   mcphub-nvim,
   mcp-hub,
   phpantom-lsp,
+  laravel-lsp,
   ...
 }: {
   # Import keybinds module
@@ -524,6 +525,7 @@
 
     # PHP LSP
     phpantom-lsp
+    laravel-lsp
 
     # Formatters
     alejandra
@@ -560,6 +562,14 @@
       root_markers = { 'composer.json', '.git' },
     }
     vim.lsp.enable('phpantom')
+
+    -- Laravel LSP setup (framework-aware; runs alongside phpantom)
+    vim.lsp.config['laravel_lsp'] = {
+      cmd = { 'laravel-lsp' },
+      filetypes = { 'php', 'blade' },
+      root_markers = { 'artisan', 'composer.json', '.git' },
+    }
+    vim.lsp.enable('laravel_lsp')
 
     -- Laravel setup
     require('laravel').setup({

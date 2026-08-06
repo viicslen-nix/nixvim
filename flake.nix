@@ -51,6 +51,7 @@
         mcp-hub = sharedPackages.nvim.mcp-hub;
         mcphub-nvim = inputs.mcphub-nvim.packages.${system}.default;
         phpantom-lsp = sharedPackages.php.phpantom-lsp;
+        laravel-lsp = sharedPackages.php.laravel-lsp;
       in {
         # Default package is the configured Neovim
         packages = {
@@ -58,13 +59,13 @@
             pkgs = pkgsUnfree;
             module = import ./config {
               pkgs = pkgsUnfree;
-              inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
+              inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp laravel-lsp;
               inherit (pkgsUnfree) lib;
             };
           };
 
           # Expose custom packages
-          inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp;
+          inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp laravel-lsp;
         };
 
         # Provide the default formatter
