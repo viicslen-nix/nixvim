@@ -100,6 +100,11 @@
 
   # ===== LSP Configuration (native vim.lsp API) =====
   lsp.servers = {
+    # PHP — general language features. laravel_lsp (configured in
+    # extraConfigLua) attaches to the same buffers and adds the
+    # framework-aware bits on top; both are meant to run together.
+    intelephense.enable = true;
+
     # Nix
     nil_ls = {
       enable = true;
