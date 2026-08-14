@@ -561,10 +561,13 @@
     )
 
     -- Laravel LSP setup (framework-aware)
+    -- `artisan` only: the server rejects any other root with "Initialize
+    -- request root URI must be a Laravel project", so matching composer.json
+    -- or .git just starts it to fail in every non-Laravel PHP repo.
     vim.lsp.config['laravel_lsp'] = {
       cmd = { 'laravel-lsp' },
       filetypes = { 'php', 'blade' },
-      root_markers = { 'artisan', 'composer.json', '.git' },
+      root_markers = { 'artisan' },
     }
     vim.lsp.enable('laravel_lsp')
 
