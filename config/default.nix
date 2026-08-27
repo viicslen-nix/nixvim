@@ -437,7 +437,6 @@
           {name = "path";}
           {name = "buffer";}
           {name = "luasnip";}
-          {name = "copilot";}
         ];
         snippet = {
           expand = "function(args) require('luasnip').lsp_expand(args.body) end";
@@ -450,16 +449,13 @@
 
     # ===== AI Assistance =====
 
-    # Copilot
-    copilot-lua = {
+    # Supermaven (inline AI completion)
+    supermaven = {
       enable = true;
-      settings = {
-        suggestion = {
-          enabled = false;
-        };
-        panel = {
-          enabled = false;
-        };
+      settings.keymaps = {
+        accept_suggestion = "<M-L>";
+        accept_word = "<M-l>";
+        clear_suggestions = "<M-]>";
       };
     };
 
@@ -467,9 +463,9 @@
     avante = {
       enable = true;
       settings = {
-        provider = "copilot";
-        cursor_applying_provider = "copilot";
-        auto_suggestions_provider = "copilot";
+        # Drives the local `claude` CLI over ACP, so it reuses the
+        # Claude Code login instead of an API key.
+        provider = "claude-code";
         behaviour = {
           auto_suggestions = false;
         };
@@ -528,6 +524,9 @@
   extraPackages = with pkgs; [
     # MCP Hub CLI
     mcp-hub
+
+    # ACP bridge to the Claude Code CLI (avante's claude-code provider)
+    claude-agent-acp
 
     # PHP LSP
     laravel-lsp

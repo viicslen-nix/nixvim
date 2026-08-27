@@ -9,7 +9,7 @@ A standalone Neovim configuration using the NixVim framework, providing feature 
 - **OneDark Theme**: Darker variant with transparency support
 - **Productivity Plugins**: Telescope, snacks.nvim (explorer, lazygit), bufferline, lualine, alpha dashboard, which-key
 - **Git Integration**: Gitsigns, vim-fugitive, git-conflict, gitlinker, worktrees.nvim
-- **AI Assistance**: GitHub Copilot, Avante with MCPHub integration
+- **AI Assistance**: Supermaven inline completion, Avante (claude-code ACP) with MCPHub integration
 - **Custom Plugins**: laravel.nvim, worktrees.nvim, neotest-pest, mcphub.nvim
 
 ## Quick Start
