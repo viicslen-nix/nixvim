@@ -1,247 +1,234 @@
-# NixVim Neovim Configuration
+<div align="center">
 
-A standalone Neovim configuration using the NixVim framework, providing feature parity with the nvf-based configuration.
+# NixVim
 
-## Features
+**A standalone Neovim, configured with [NixVim](https://github.com/nix-community/nixvim) and built as a single package.**
 
-- **Full LSP Support**: 17 language servers including Nix, PHP (Intelephense), TypeScript, Python, Go, Lua, Bash, HTML, CSS, Tailwind, Terraform, HCL, Markdown, SQL, C/C++, and Zig
-- **TreeSitter**: Syntax highlighting and code folding for all supported languages
-- **OneDark Theme**: Darker variant with transparency support
-- **Productivity Plugins**: Telescope, snacks.nvim (explorer, lazygit), bufferline, lualine, alpha dashboard, which-key
-- **Git Integration**: Gitsigns, vim-fugitive, git-conflict, gitlinker, worktrees.nvim
-- **AI Assistance**: Supermaven inline completion, Avante (claude-code ACP) with MCPHub integration
-- **Custom Plugins**: laravel.nvim, worktrees.nvim, neotest-pest, mcphub.nvim
+[![NixOS unstable](https://img.shields.io/badge/nixpkgs-unstable-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
+[![NixVim](https://img.shields.io/badge/built_with-NixVim-7EBAE4?style=flat-square&logo=neovim&logoColor=white)](https://github.com/nix-community/nixvim)
+[![flake-parts](https://img.shields.io/badge/flake-parts-7EBAE4?style=flat-square&logo=nixos&logoColor=white)](https://flake.parts)
 
-## Quick Start
+</div>
 
-### Build and Run
+> [!NOTE]
+> A personal editor config, tuned for PHP/Laravel and TypeScript/Vue work.
+> It is a submodule of [viicslen-nix/nixos](https://github.com/viicslen-nix/nixos),
+> where the `personal` preset installs it.
 
-```bash
-# Navigate to the flake directory
-cd flakes/nixvim
+## Outputs
 
-# Build the Neovim package
-nix build .#default
+Only `x86_64-linux` is built.
 
-# Run Neovim directly
-nix run .#default
+| Output | What it is |
+| --- | --- |
+| `packages.default` | The configured Neovim (`bin/nvim`), built with `makeNixvimWithModule` on an unfree-enabled nixpkgs |
+| `packages.<plugin>` | Re-exports of the custom pieces it bundles: `laravel-nvim`, `worktrees-nvim`, `neotest-pest`, `mcphub-nvim`, `mcp-hub`, `phpantom-lsp`, `laravel-lsp` |
+| `apps.default` | Runs `packages.default` |
+| `devShells.default` | `nix-output-monitor` and `alejandra` |
+| `formatter` | treefmt: deadnix → statix → alejandra |
+| `checks` | `treefmt`, `statix` (fails on lints `statix fix` cannot fix), `nix-fmt` (alejandra check) |
 
-# Or run the built result
-./result/bin/nvim
-```
+The custom plugins and language servers come from
+[`viicslen-nix/packages`](https://github.com/viicslen-nix/packages) (`nvim.*`,
+`php.*`) and [`ravitemer/mcphub.nvim`](https://github.com/ravitemer/mcphub.nvim).
 
-### Development Shell
+## Usage
 
-```bash
-# Enter the development shell
-nix develop
-
-# This provides:
-# - nix-output-monitor (nom) for better build output
-# - alejandra for Nix formatting
-```
-
-### Build with Enhanced Output
+Run it without installing:
 
 ```bash
-# Use nix-output-monitor for better build visibility
-nom build .#default
+nix run github:viicslen-nix/nixvim
 ```
 
-## Directory Structure
+Or consume it as a flake input:
+
+```nix
+{
+  inputs.nixvim.url = "github:viicslen-nix/nixvim";
+
+  outputs = {nixpkgs, nixvim, ...}: {
+    nixosConfigurations.host = nixpkgs.lib.nixosSystem {
+      modules = [
+        ({pkgs, ...}: {
+          environment.systemPackages = [
+            nixvim.packages.${pkgs.stdenv.hostPlatform.system}.default
+          ];
+        })
+      ];
+    };
+  };
+}
+```
+
+### Options
+
+The config declares one option of its own; everything else is stock NixVim.
+
+| Option | Default | Effect |
+| --- | --- | --- |
+| `phpantom.enable` | `false` | Adds the PHPantom PHP language server and points laravel.nvim at it |
+
+Set it by extending the built package (NixVim's standalone `extend`):
+
+```nix
+nixvim.packages.${system}.default.extend {phpantom.enable = true;}
+```
+
+## What's inside
+
+| Area | Pieces |
+| --- | --- |
+| **LSP** | intelephense, nil (alejandra formatting), ts_ls + `@vue/typescript-plugin`, vue_ls, pyright, gopls, lua_ls, bashls, html, cssls, tailwindcss, eslint (fix on save), terraformls, marksman, sqls, clangd, zls — plus `laravel_lsp`, started only where an `artisan` file exists |
+| **Syntax** | Treesitter (highlight, indent, context) |
+| **UI** | OneDark *darker* (transparent), lualine, bufferline, alpha, which-key (helix preset), notify, indent-blankline, illuminate, colorizer, trouble, lspsaga |
+| **Navigation** | Telescope (fzf-native), snacks.nvim explorer, leap, toggleterm |
+| **Editing** | comment, nvim-autopairs, nvim-surround, nvim-cmp + LuaSnip |
+| **Git** | gitsigns, fugitive, git-conflict, gitlinker, worktrees.nvim, lazygit via snacks |
+| **Testing / debug** | neotest + neotest-pest, nvim-dap, dap-ui, dap-virtual-text |
+| **AI** | Supermaven inline completion; Avante on the `claude-code` provider (ACP via `claude-agent-acp`, reuses the Claude Code login) with MCPHub tools and slash commands |
+| **Laravel** | laravel.nvim, laravel-lsp, neotest-pest |
+
+## Keybindings
+
+Leader and local leader are both <kbd>Space</kbd>. Press it and wait for
+which-key to list the rest.
+
+<details>
+<summary><b>Full reference</b></summary>
+
+**Editing and buffers**
+
+| Key | Mode | Action |
+| --- | --- | --- |
+| `<C-s>` | n, v, i | Save file |
+| `<leader>cf` | n | Copy relative file path |
+| `<leader>;` / `<leader>,` | n | Append `;` / `,` to the line |
+| `>` / `<` | v | Indent / unindent, keep selection |
+| `<C-/>` | n, v | Toggle comment |
+| `jk` | i | Exit insert mode |
+| `<Esc>` | n | Clear search highlight |
+| `<Tab>` / `<S-Tab>` | n | Next / previous buffer |
+| `<leader>q` | n | Close buffer |
+| `<C-h/j/k/l>` | n | Move between windows |
+| `<leader>e` | n | Snacks explorer |
+| `<C-\>` | n | Floating terminal |
+
+**Find (Telescope)**
+
+| Key | Action |
+| --- | --- |
+| `<leader>ff` | Files |
+| `<leader>fg` | Live grep |
+| `<leader>fb` | Buffers |
+| `<leader>fh` | Help tags |
+| `<leader>fr` | Recent files |
+| `<leader>fc` | Commands |
+| `<leader>fd` | Diagnostics |
+
+**LSP**
+
+| Key | Mode | Action |
+| --- | --- | --- |
+| `gd` / `<leader>gd` | n | Go to definition |
+| `<leader>gD` | n | Go to declaration |
+| `gD` | n | References |
+| `gt` / `<leader>gt` | n | Type definition |
+| `gi` / `<leader>gi` | n | Implementations |
+| `K` / `<leader>h` | n | Hover documentation |
+| `<leader>pd` | n | Peek definition |
+| `<leader>gr` | n | Lspsaga finder |
+| `<leader>ca` | n, v | Code action |
+| `<leader>rn` | n | Rename symbol |
+| `<leader>j` / `<leader>k` | n | Next / previous diagnostic |
+| `<leader>ls` / `<leader>lx` / `<leader>lr` | n | Start / stop / restart LSP |
+
+**Git**
+
+| Key | Action |
+| --- | --- |
+| `<leader>gg` | Lazygit |
+| `<leader>gs` | Fugitive status |
+| `<leader>gl` | Copy git link |
+| `<leader>gws` | Worktrees picker |
+| `<leader>gwc` | New worktree |
+| `<leader>gwa` | Worktree for an existing branch |
+
+**Laravel, tests, debugging**
+
+| Key | Action |
+| --- | --- |
+| `<leader>lla` / `<leader>llr` / `<leader>llm` | Artisan / routes / related |
+| `<leader>tt` / `<leader>tf` | Run nearest test / file |
+| `<leader>to` | Toggle test output |
+| `<leader>db` | Toggle breakpoint |
+| `<leader>dc` | Continue / start debugging |
+| `<leader>di` / `<leader>do` | Step into / over |
+| `<leader>du` | Toggle DAP UI |
+
+**Diagnostics (Trouble)**
+
+| Key | Action |
+| --- | --- |
+| `<leader>xx` | All diagnostics |
+| `<leader>xd` | Current buffer diagnostics |
+| `<leader>xq` / `<leader>xl` | Quickfix / location list |
+| `<leader>xs` | Symbols |
+| `<leader>xL` | LSP definitions, references, … |
+
+**Completion and AI (insert mode)**
+
+| Key | Action |
+| --- | --- |
+| `<C-Space>` | Open completion |
+| `<Tab>` / `<S-Tab>` | Next / previous item |
+| `<CR>` | Confirm |
+| `<C-e>` | Close |
+| `<C-d>` / `<C-f>` | Scroll docs |
+| `<M-L>` / `<M-l>` | Accept Supermaven suggestion / word |
+| `<M-]>` | Clear Supermaven suggestion |
+
+</details>
+
+<details>
+<summary><b>Keymap conventions</b></summary>
+
+The bindings share a vocabulary with the niri and Hyprland configs in the
+parent repo, so muscle memory carries between editor and window manager:
+
+- **Namespaces by leader prefix:** `g` git/LSP navigation, `gw` worktrees,
+  `ll` Laravel, `t` tests, `d` debugging, `x` diagnostics, `f` find.
+- **H/J/K/L for direction:** `Ctrl` moves between Neovim splits, `Super`
+  between WM windows.
+- **Mnemonic pairs:** `<leader>q` closes a buffer as `Super+Q` closes a window;
+  `<leader>e` opens the explorer as `Super+E` opens the file manager.
+
+</details>
+
+## Layout
 
 ```text
-flakes/nixvim/
-├── flake.nix           # Flake definition with inputs and outputs
-├── flake.lock          # Locked dependency versions
-├── README.md           # This file
-├── apps.nix            # App output definitions
-├── packages.nix        # Package output definitions
-├── config/
-│   ├── default.nix     # Main NixVim configuration
-│   └── keybinds.nix    # Keybind definitions
-└── pkgs/
-    ├── laravel-nvim.nix    # Laravel.nvim plugin
-    ├── worktrees-nvim.nix  # Worktrees.nvim plugin
-    ├── neotest-pest.nix    # Neotest Pest adapter
-    └── mcp-hub.nix         # MCPHub plugin and CLI
+.
+├── flake.nix        # inputs, packages, checks, devShell
+├── apps.nix         # apps.default
+├── treefmt.nix      # formatter / checks.treefmt
+└── config/
+    ├── default.nix  # options, LSP, plugins, extra Lua
+    ├── keybinds.nix # keymaps
+    └── phpantom.nix # phpantom.enable
 ```
 
-## Keybindings Reference
+## Development
 
-This configuration follows a **unified keymap philosophy** shared with the window managers (Hyprland/Niri) to maximize muscle memory and minimize cognitive overhead. See the **Unified Keymap Philosophy** section below for details.
-
-### Leader Key
-- `<leader>` = `Space`
-- `<localleader>` = `Space`
-
-### Core Keybinds
-
-**File Operations**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `Ctrl + S` | n, v, i | Save file |
-| `<leader>;` | n | Append semicolon |
-| `<leader>,` | n | Append comma |
-
-**Buffer Management**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `Tab` | n | Next buffer |
-| `Shift + Tab` | n | Previous buffer |
-| `<leader>q` | n | Close buffer |
-
-**Window Navigation (Vim-style)**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `Ctrl + H` | n | Move to left window |
-| `Ctrl + J` | n | Move to bottom window |
-| `Ctrl + K` | n | Move to top window |
-| `Ctrl + L` | n | Move to right window |
-
-**Visual Mode**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `>` | v | Indent selection (stay in visual) |
-| `<` | v | Unindent selection (stay in visual) |
-
-**File Tree**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>e` | n | Toggle Snacks Explorer |
-
-**Comments**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `Ctrl + /` | n | Toggle line comment |
-| `Ctrl + /` | v | Toggle selection comment |
-
-**Insert Mode**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `jk` | i | Exit to normal mode |
-
-**Search**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `ESC` | n | Clear search highlight |
-
-### LSP Keybinds (Leader + G)
-
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>gD` | n | Go to declaration |
-| `<leader>gd` | n | Go to definition |
-| `<leader>gt` | n | Go to type definition |
-| `<leader>h` | n | Hover documentation |
-| `<leader>gi` | n | List implementations |
-| `<leader>gr` | n | List references |
-
-### Git Operations (Leader + G)
-
-**General Git**
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>gg` | n | Open Lazygit |
-| `<leader>gs` | n | Git status (Fugitive) |
-| `<leader>gl` | n | Copy git link (GitLinker) |
-
-**Git Worktrees** (`<leader>gw`)
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>gws` | n | Worktrees picker |
-| `<leader>gwc` | n | Create new worktree |
-| `<leader>gwa` | n | Worktree for existing branch |
-
-### Laravel Operations (Leader + LL)
-
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>lla` | n | Laravel Artisan |
-| `<leader>llr` | n | Laravel Routes |
-| `<leader>llm` | n | Laravel Related |
-
-### Testing (Leader + T)
-
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>tt` | n | Run nearest test |
-| `<leader>tf` | n | Run file tests |
-| `<leader>to` | n | Toggle test output |
-
-### Debugging (Leader + D)
-
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>db` | n | Toggle breakpoint |
-| `<leader>dc` | n | Continue/Start debugging |
-| `<leader>di` | n | Step into |
-| `<leader>do` | n | Step over |
-| `<leader>du` | n | Toggle DAP UI |
-
-### Diagnostics (Leader + X)
-
-| Keybind | Mode | Action |
-|---------|------|--------|
-| `<leader>xx` | n | Toggle diagnostics |
-| `<leader>xw` | n | Workspace diagnostics |
-| `<leader>xd` | n | Document diagnostics |
-
-### Unified Keymap Philosophy
-
-This configuration is part of a **cross-system keymap standardization** that spans both editors (Neovim/Nixvim) and window managers (Hyprland/Niri).
-
-**Design Principles:**
-1. **Leader-based namespacing**: Logical grouping of related actions (`<leader>g*` for git, `<leader>ll*` for Laravel, etc.)
-2. **Vim-style navigation**: H/J/K/L everywhere for directional movement
-3. **Consistent modifiers**: Ctrl for window navigation, matching WM patterns
-4. **Mnemonic keys**: Q for quit, E for explorer, G for git, etc.
-5. **Cross-system harmony**: Editor keybinds mirror window manager patterns
-
-**Cross-System Consistency:**
-- **Close/Quit**: `<leader>q` (buffer), `SUPER+Q` (window in WMs)
-- **Explorer/Files**: `<leader>e` (file tree), `SUPER+E` (file manager in WMs)
-- **Window Navigation**: `Ctrl+H/J/K/L` (Neovim splits), `SUPER+H/J/K/L` (WM windows)
-- **Namespacing**: Leader key grouping mirrors WM application menus (`SUPER+A`)
-
-**Namespace Organization:**
-- `<leader>g*` - Git operations (general)
-- `<leader>gw*` - Git worktrees (sub-namespace)
-- `<leader>ll*` - Laravel operations
-- `<leader>t*` - Testing
-- `<leader>d*` - Debugging (DAP)
-- `<leader>x*` - Diagnostics (trouble)
-
-This structured approach reduces cognitive load and makes muscle memory transferable between your editor and window manager.
-
-See the Hyprland, Niri, and Neovim READMEs for their implementations of this unified system.
-
-## Verification
-
-### Check LSP Status
-
-```vim
-:LspInfo
+```bash
+nix build            # ./result/bin/nvim
+nix run              # try it in place
+nix develop          # nom + alejandra
+nix fmt              # deadnix, statix, alejandra via treefmt
+nix flake check      # formatting and statix gates
 ```
 
-### Check Loaded Plugins
+> [!IMPORTANT]
+> Before adding a plugin or feature, read [AGENTS.md](./AGENTS.md): check the
+> NixVim and plugin docs and prefer a built-in option over custom Lua.
 
-```vim
-:Lazy
-```
-
-### Check Keybinds
-
-Press `<leader>` and wait for which-key popup.
-
-## Comparison with nvf
-
-This configuration is designed to be feature-equivalent with the nvf-based Neovim configuration in `flakes/neovim/`. The main differences are:
-
-1. **Framework**: Uses NixVim instead of nvf
-2. **Configuration Style**: NixVim module options instead of nvf's vim.* options
-3. **Plugin Loading**: Uses NixVim's native plugin modules where available
-
-## License
-
-Same as the parent repository.
+Inside Neovim, `:checkhealth vim.lsp` shows which servers attached.

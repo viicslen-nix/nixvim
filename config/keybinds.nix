@@ -1,5 +1,4 @@
 # Keybind configuration for NixVim
-# Mirrors the keybinds from the nvf flake configuration
 {lib, ...}: {
   keymaps = [
     # File operations
@@ -104,7 +103,7 @@
       };
     }
 
-    # LSP keybinds (additional to plugins.lsp.keymaps)
+    # LSP keybinds (additional to lsp.keymaps)
     {
       key = "gd";
       mode = ["n"];
