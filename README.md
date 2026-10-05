@@ -26,7 +26,7 @@ Only `x86_64-linux` is built.
 | `apps.default` | Runs `packages.default` |
 | `devShells.default` | `nix-output-monitor` and `alejandra` |
 | `formatter` | treefmt: deadnix → statix → alejandra |
-| `checks` | `treefmt`, `statix` (fails on lints `statix fix` cannot fix), `nix-fmt` (alejandra check) |
+| `checks` | `treefmt`, `statix` (fails on lints `statix fix` cannot fix) |
 
 The custom plugins and language servers come from
 [`viicslen-nix/packages`](https://github.com/viicslen-nix/packages) (`nvim.*`,

@@ -28,7 +28,6 @@
 
   outputs = inputs @ {
     flake-parts,
-    self,
     nixvim,
     ...
   }:
@@ -74,16 +73,10 @@
 
         treefmt.imports = [./treefmt.nix];
 
-        # Check if codebase is properly formatted
-        checks = {
-          nix-fmt = pkgs.runCommand "nix-fmt-check" {nativeBuildInputs = [pkgs.alejandra];} ''
-            alejandra --check ${self} < /dev/null | tee $out
-          '';
-          # treefmt runs `statix fix`, which silently skips unfixable lints like W20.
-          statix = pkgs.runCommandLocal "statix-check" {} ''
-            ${pkgs.lib.getExe pkgs.statix} check ${./.} && touch $out
-          '';
-        };
+        # treefmt runs `statix fix`, which silently skips unfixable lints like W20.
+        checks.statix = pkgs.runCommandLocal "statix-check" {} ''
+          ${pkgs.lib.getExe pkgs.statix} check ${./.} && touch $out
+        '';
 
         # Development shell
         devShells.default = pkgs.mkShell {
