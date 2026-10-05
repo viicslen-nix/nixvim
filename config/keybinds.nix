@@ -611,11 +611,6 @@
 
   lsp.keymaps = [
     {
-      key = "gd";
-      lspBufAction = "definition";
-      options.desc = "Go to definition";
-    }
-    {
       key = "gD";
       lspBufAction = "references";
       options.desc = "Show references";
@@ -629,11 +624,6 @@
       key = "gi";
       lspBufAction = "implementation";
       options.desc = "Go to implementation";
-    }
-    {
-      key = "K";
-      lspBufAction = "hover";
-      options.desc = "Show hover documentation";
     }
     {
       key = "<leader>k";
@@ -661,14 +651,9 @@
       options.desc = "Restart LSP";
     }
     {
-      key = "gd";
-      action = lib.nixvim.mkRaw "require('telescope.builtin').lsp_definitions";
-      options.desc = "Go to definition (Telescope)";
-    }
-    {
       key = "K";
       action = "<CMD>Lspsaga hover_doc<Enter>";
-      options.desc = "Show hover documentation (Lspsaga)";
+      options.desc = "Show hover documentation";
     }
   ];
 }
