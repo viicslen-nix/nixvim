@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     packages = {
       url = "github:viicslen-nix/packages";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,6 +34,7 @@
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
+        inputs.treefmt-nix.flakeModule
         ./apps.nix
       ];
 
@@ -67,13 +72,16 @@
           inherit laravel-nvim worktrees-nvim neotest-pest mcphub-nvim mcp-hub phpantom-lsp laravel-lsp;
         };
 
-        # Provide the default formatter
-        formatter = pkgs.alejandra;
+        treefmt.imports = [./treefmt.nix];
 
         # Check if codebase is properly formatted
         checks = {
           nix-fmt = pkgs.runCommand "nix-fmt-check" {nativeBuildInputs = [pkgs.alejandra];} ''
             alejandra --check ${self} < /dev/null | tee $out
+          '';
+          # treefmt runs `statix fix`, which silently skips unfixable lints like W20.
+          statix = pkgs.runCommandLocal "statix-check" {} ''
+            ${pkgs.lib.getExe pkgs.statix} check ${./.} && touch $out
           '';
         };
 
